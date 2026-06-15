@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <rect width="600" height="400" fill="#F2F7F5" stroke="#000000" stroke-width="6"/>
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#000000" stroke-width="1" opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="600" height="400" fill="url(#grid)" />
+  <!-- Title Box -->
+  <g transform="translate(50, 40)">
+    <rect width="500" height="60" fill="#FAAE2B" stroke="#000000" stroke-width="4" rx="4"/>
+    <text x="250" y="38" font-family="monospace" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">OMNIQUEUE // DISTRIBUTED WORKER ROUTING</text>
+  </g>
+  <!-- Schema Box -->
+  <g transform="translate(50, 130)">
+    <rect width="500" height="220" fill="#FFFFFF" stroke="#000000" stroke-width="4" rx="4"/>
+    
+    <!-- Worker Boxes -->
+    <g transform="translate(30, 70)">
+      <rect width="100" height="80" fill="#1E293B" stroke="#000000" stroke-width="3" rx="4"/>
+      <text x="50" y="45" font-family="monospace" font-size="14" font-weight="bold" fill="#FAAE2B" text-anchor="middle">gRPC API</text>
+    </g>
+    <g transform="translate(200, 70)">
+      <rect width="100" height="80" fill="#FAAE2B" stroke="#000000" stroke-width="3" rx="4"/>
+      <text x="50" y="45" font-family="monospace" font-size="14" font-weight="bold" fill="#000000" text-anchor="middle">Broker</text>
+    </g>
+    <g transform="translate(370, 70)">
+      <rect width="100" height="80" fill="#1E293B" stroke="#000000" stroke-width="3" rx="4"/>
+      <text x="50" y="45" font-family="monospace" font-size="14" font-weight="bold" fill="#F2F7F5" text-anchor="middle">Redis DB</text>
+    </g>
+
+    <!-- Connectors -->
+    <path d="M 130 110 L 200 110" stroke="#000000" stroke-width="3" marker-end="url(#arrow)" />
+    <path d="M 300 110 L 370 110" stroke="#000000" stroke-width="3" />
+    
+    <!-- Arrow marker definition -->
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#000000"/>
+      </marker>
+    </defs>
+  </g>
+</svg>
