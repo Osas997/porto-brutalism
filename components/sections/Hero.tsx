@@ -7,8 +7,32 @@ import { Marquee } from "@/components/ui/Marquee";
 import { siteConfig, marqueeTexts } from "@/lib/data";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-export function Hero() {
+export interface HeroProps {
+  profile?: {
+    name: string | null;
+    role: string | null;
+    tagline: string | null;
+    bio: string | null;
+  };
+  skills?: { name: string }[];
+}
+
+export function Hero({ profile, skills }: HeroProps) {
   const prefersReducedMotion = useReducedMotion();
+
+  // Handle fallback values if profile database is empty
+  const name = profile?.name || siteConfig.name;
+  const role = profile?.role || siteConfig.role;
+  const tagline = profile?.tagline || siteConfig.tagline;
+  const bio = profile?.bio || siteConfig.bio;
+
+  // Render skills in locate output
+  const skillListText = skills && skills.length > 0 
+    ? `[${skills.slice(0, 6).map(s => s.name).join(", ")}]`
+    : "[Go, Rust, TypeScript, K8s, PostgreSQL, Redis]";
+
+  const whoamiText = name.split(" ")[1].toLowerCase();
+  const footerText = `${name.toUpperCase().replace(/\s+/g, "_")}_V2.0`;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -32,25 +56,25 @@ export function Hero() {
       {/* Label */}
       <div className="mb-6">
         <span className="inline-flex items-center gap-1.5 neo-border neo-shadow px-3.5 py-1.5 bg-secondary text-primary text-xs font-mono font-bold uppercase tracking-wider">
-          &gt;_ {siteConfig.role}
+          &gt;_ {role}
         </span>
       </div>
 
       {/* Name */}
       <h1 className="heading-display text-primary uppercase mb-6 leading-none">
-        {siteConfig.name}
+        {name}
       </h1>
 
       {/* Tagline */}
       <div className="border-l-4 border-secondary pl-4 mb-6">
         <p className="font-mono font-bold text-lg md:text-xl text-primary leading-snug">
-          {siteConfig.tagline}
+          {tagline}
         </p>
       </div>
 
       {/* Bio */}
       <p className="font-mono text-muted text-sm md:text-base leading-relaxed mb-10 max-w-xl">
-        {siteConfig.bio}
+        {bio}
       </p>
 
       {/* CTA Buttons */}
@@ -105,14 +129,14 @@ export function Hero() {
           {/* Cmd 1 */}
           <div>
             <p className="text-secondary font-bold">$ whoami</p>
-            <p className="text-primary mt-1 font-medium">alexander</p>
+            <p className="text-primary mt-1 font-medium">{whoamiText}</p>
           </div>
           <hr className="border-t-2 border-primary/10" />
 
           {/* Cmd 2 */}
           <div>
             <p className="text-secondary font-bold">$ locate --skills</p>
-            <p className="text-primary mt-1 font-medium">[Go, Rust, TypeScript, K8s, PostgreSQL, Redis]</p>
+            <p className="text-primary mt-1 font-medium">{skillListText}</p>
           </div>
           <hr className="border-t-2 border-primary/10" />
 
@@ -127,7 +151,7 @@ export function Hero() {
 
           {/* Footer */}
           <div className="flex items-center justify-between pt-2 text-xs font-bold text-muted">
-            <span>ALEX_CARTER_V2.0</span>
+            <span>{footerText}</span>
             <span className="w-3.5 h-3.5 bg-secondary border-2 border-primary" />
           </div>
         </div>

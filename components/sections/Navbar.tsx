@@ -7,13 +7,19 @@ import { useTheme } from "@/hooks/useTheme";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { navLinks } from "@/lib/data";
 
-export function Navbar() {
+interface NavbarProps {
+  name?: string;
+}
+
+export function Navbar({ name }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { scrollDirection, scrollY } = useScrollDirection();
 
   const isScrolled = scrollY > 50;
   const isHidden = scrollDirection === "down" && scrollY > 200;
+
+  const logoText = name ? `${name.split(" ")[1].toUpperCase()}//` : "ALEXANDER//";
 
   return (
     <motion.header
@@ -32,7 +38,7 @@ export function Navbar() {
             href="#home"
             className="font-mono font-bold tracking-wider text-lg md:text-xl text-primary cursor-pointer hover:text-secondary transition-colors duration-200"
           >
-            ALEXANDER//
+            {logoText}
           </a>
 
           {/* Desktop Nav */}

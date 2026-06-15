@@ -25,14 +25,44 @@ function TwitterIcon({ size = 18 }: { size?: number }) {
   );
 }
 
+function InstagramIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
 const socialIcons: Record<string, React.ReactNode> = {
   github: <GithubIcon />,
   linkedin: <LinkedinIcon />,
   twitter: <TwitterIcon />,
+  instagram: <InstagramIcon />,
 };
 
-export function Footer() {
+export interface FooterProps {
+  name?: string;
+  githubUrl?: string | null;
+  instagramUrl?: string | null;
+  linkedinUrl?: string | null;
+}
+
+export function Footer({ name, githubUrl, instagramUrl, linkedinUrl }: FooterProps) {
   const currentYear = new Date().getFullYear();
+
+  const dynamicSocialLinks = [];
+  if (githubUrl) {
+    dynamicSocialLinks.push({ name: "GitHub", url: githubUrl, icon: "github" });
+  }
+  if (instagramUrl) {
+    dynamicSocialLinks.push({ name: "Instagram", url: instagramUrl, icon: "instagram" });
+  }
+  if (linkedinUrl) {
+    dynamicSocialLinks.push({ name: "LinkedIn", url: linkedinUrl, icon: "linkedin" });
+  }
+  const linksToRender = dynamicSocialLinks.length > 0 ? dynamicSocialLinks : socialLinks;
 
   return (
     <footer className="border-t-3 border-border bg-surface">
@@ -41,18 +71,17 @@ export function Footer() {
           {/* Logo + Copyright */}
           <div className="flex flex-col items-center md:items-start gap-2">
             <span className="font-mono font-bold tracking-wider text-base text-primary uppercase">
-              ALEXANDER//
+              {name}
             </span>
             <p className="body-sm text-muted flex items-center gap-1">
               © {currentYear} — Built with{" "}
-              <Heart size={14} className="text-error fill-error" /> and lots of
-              coffee
+              <Heart size={14} className="text-error fill-error" />
             </p>
           </div>
 
           {/* Social Links */}
           <div className="flex items-center gap-3">
-            {socialLinks.map((link) => (
+            {linksToRender.map((link) => (
               <a
                 key={link.name}
                 href={link.url}

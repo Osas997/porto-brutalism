@@ -32,13 +32,33 @@ function TwitterIcon({ size = 20 }: { size?: number }) {
   );
 }
 
+function InstagramIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
 const socialIcons: Record<string, React.ReactNode> = {
   github: <GithubIcon />,
   linkedin: <LinkedinIcon />,
   twitter: <TwitterIcon />,
+  instagram: <InstagramIcon />,
 };
 
-export function Contact() {
+export interface ContactProps {
+  profile?: {
+    email: string | null;
+    githubUrl?: string | null;
+    instagramUrl?: string | null;
+    linkedinUrl?: string | null;
+  };
+}
+
+export function Contact({ profile }: ContactProps = {}) {
   const [copied, setCopied] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -46,14 +66,16 @@ export function Contact() {
     message: "",
   });
 
+  const email = profile?.email || siteConfig.email;
+
   const copyEmail = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(siteConfig.email);
+      await navigator.clipboard.writeText(email);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
       const textArea = document.createElement("textarea");
-      textArea.value = siteConfig.email;
+      textArea.value = email;
       document.body.appendChild(textArea);
       textArea.select();
       document.execCommand("copy");
@@ -61,11 +83,11 @@ export function Contact() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
-  }, []);
+  }, [email]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href = `mailto:${siteConfig.email}?subject=Hello from ${formData.name}&body=${encodeURIComponent(formData.message)}`;
+    window.location.href = `mailto:${email}?subject=Hello from ${formData.name}&body=${encodeURIComponent(formData.message)}`;
   };
 
   return (
@@ -91,7 +113,7 @@ export function Contact() {
                 </div>
                 <div className="flex items-center gap-3">
                   <p className="body-md text-on-surface font-mono">
-                    {siteConfig.email}
+                    {email}
                   </p>
                   <button
                     onClick={copyEmail}
@@ -118,19 +140,33 @@ export function Contact() {
                   Find me online
                 </h3>
                 <div className="flex flex-wrap gap-3">
-                  {socialLinks.map((link) => (
-                    <a
-                      key={link.name}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="neo-btn inline-flex items-center gap-2 px-4 py-2 bg-surface text-on-surface hover:bg-secondary hover:text-primary cursor-pointer"
-                      aria-label={`Visit ${link.name} profile`}
-                    >
-                      {socialIcons[link.icon]}
-                      <span className="label">{link.name}</span>
-                    </a>
-                  ))}
+                  {(() => {
+                    const dynamicSocialLinks = [];
+                    if (profile?.githubUrl) {
+                      dynamicSocialLinks.push({ name: "GitHub", url: profile.githubUrl, icon: "github" });
+                    }
+                    if (profile?.instagramUrl) {
+                      dynamicSocialLinks.push({ name: "Instagram", url: profile.instagramUrl, icon: "instagram" });
+                    }
+                    if (profile?.linkedinUrl) {
+                      dynamicSocialLinks.push({ name: "LinkedIn", url: profile.linkedinUrl, icon: "linkedin" });
+                    }
+                    const linksToRender = dynamicSocialLinks.length > 0 ? dynamicSocialLinks : socialLinks;
+                    
+                    return linksToRender.map((link) => (
+                      <a
+                        key={link.name}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="neo-btn inline-flex items-center gap-2 px-4 py-2 bg-surface text-on-surface hover:bg-secondary hover:text-primary cursor-pointer"
+                        aria-label={`Visit ${link.name} profile`}
+                      >
+                        {socialIcons[link.icon]}
+                        <span className="label">{link.name}</span>
+                      </a>
+                    ));
+                  })()}
                 </div>
               </Card>
 

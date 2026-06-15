@@ -4,8 +4,32 @@ import { Briefcase, GraduationCap, Code2 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { siteConfig, skills, experiences, education } from "@/lib/data";
+import type { Experience, Education as EduType, Skill } from "@/types";
+import { sortByDurationDesc } from "@/lib/utils";
 
-export function About() {
+export interface AboutProps {
+  profile?: {
+    name: string | null;
+    role: string | null;
+    aboutBio: string | null;
+    location: string | null;
+    avatarUrl?: string | null;
+    experience?: Experience[];
+    education?: EduType[];
+  };
+  skills?: Skill[];
+}
+
+export function About({ profile, skills: dbSkills }: AboutProps = {}) {
+  const skillList = dbSkills && dbSkills.length > 0 ? dbSkills : skills;
+
+  const name = profile?.name || "ALEX CARTER";
+  const role = profile?.role || "SYSTEMS ENGINEER";
+  const aboutBio = profile?.aboutBio || siteConfig.aboutBio;
+  const location = profile?.location || siteConfig.location;
+  const experienceList = sortByDurationDesc(profile?.experience || experiences);
+  const educationList = sortByDurationDesc(profile?.education || education);
+
   const skillCategories = [
     { key: "backend", label: "Backend" },
     { key: "frontend", label: "Frontend" },
@@ -31,13 +55,13 @@ export function About() {
               <div className="h-1 w-16 bg-secondary mb-6" />
 
               <p className="font-mono text-primary text-base leading-relaxed mb-8">
-                {siteConfig.aboutBio}
+                {aboutBio}
               </p>
 
               {/* Location Badge */}
               <div className="inline-block">
                 <div className="neo-border bg-white dark:bg-surface text-primary px-4 py-2.5 font-mono text-sm font-bold rounded-sm shadow-[3px_3px_0px_rgba(0,0,0,1)] uppercase tracking-wide">
-                  LOCATION: <span className="text-secondary">{siteConfig.location}</span>
+                  LOCATION: <span className="text-secondary">{location}</span>
                 </div>
               </div>
             </div>
@@ -53,20 +77,28 @@ export function About() {
                   {/* Inner Dashed Border */}
                   <div className="border-3 border-dashed border-primary/30 rounded-sm w-full h-full p-6 flex flex-col items-center justify-center bg-surface/50">
                     {/* circular avatar symbol */}
-                    <div className="w-24 h-24 rounded-full bg-white dark:bg-surface border-3 border-primary flex items-center justify-center mb-4 shadow-[3px_3px_0px_rgba(0,0,0,1)] transition-transform duration-200 group-hover:scale-105 group-hover:rotate-6">
-                      <span className="font-mono text-3xl font-bold text-secondary tracking-tighter flex items-center">
-                        &gt;_
-                      </span>
+                    <div className="w-24 h-24 rounded-full bg-white dark:bg-surface border-3 border-primary flex items-center justify-center mb-4 shadow-[3px_3px_0px_rgba(0,0,0,1)] transition-transform duration-200 group-hover:scale-105 group-hover:rotate-6 overflow-hidden">
+                      {profile?.avatarUrl ? (
+                        <img
+                          src={profile.avatarUrl}
+                          alt={name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="font-mono text-3xl font-bold text-secondary tracking-tighter flex items-center">
+                          &gt;_
+                        </span>
+                      )}
                     </div>
 
                     {/* Name */}
-                    <h4 className="font-mono font-extrabold text-xl text-primary tracking-tight uppercase mb-1">
-                      ALEX CARTER
+                    <h4 className="font-mono font-extrabold text-xl text-primary tracking-tight uppercase mb-1 text-center">
+                      {name}
                     </h4>
 
                     {/* Subtitle */}
-                    <p className="font-mono font-bold text-xs text-muted uppercase tracking-widest mb-6">
-                      SYSTEMS ENGINEER
+                    <p className="font-mono font-bold text-xs text-muted uppercase tracking-widest mb-6 text-center">
+                      {role}
                     </p>
 
                     {/* Status Pill */}
@@ -90,7 +122,7 @@ export function About() {
 
             <div className="space-y-6">
               {skillCategories.map(({ key, label }) => {
-                const categorySkills = skills.filter((s) => s.category === key);
+                const categorySkills = skillList.filter((s) => s.category === key);
                 if (categorySkills.length === 0) return null;
 
                 return (
@@ -126,7 +158,7 @@ export function About() {
               <div className="absolute left-4 md:left-6 top-0 bottom-0 w-0.5 bg-border" />
 
               <div className="space-y-8">
-                {experiences.map((exp, index) => (
+                {experienceList.map((exp, index) => (
                   <ScrollReveal key={exp.id} delay={index * 0.1}>
                     <div className="relative pl-12 md:pl-16">
                       {/* Timeline Dot */}
@@ -166,7 +198,7 @@ export function About() {
               <div className="absolute left-4 md:left-6 top-0 bottom-0 w-0.5 bg-border" />
 
               <div className="space-y-8">
-                {education.map((edu, index) => (
+                {educationList.map((edu, index) => (
                   <ScrollReveal key={edu.id} delay={index * 0.1}>
                     <div className="relative pl-12 md:pl-16">
                       <div className="absolute left-2.5 md:left-4.5 top-2 w-3 h-3 bg-secondary neo-border rounded-full" />

@@ -7,15 +7,25 @@ import { ExternalLink, FolderGit2, GitBranch } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { projects } from "@/lib/data";
+import type { Project } from "@/types";
 
-export function Projects() {
+export interface ProjectsProps {
+  projects?: Project[];
+}
+
+export function Projects({ projects: dbProjects }: ProjectsProps) {
   const [activeFilter, setActiveFilter] = useState("all");
   const router = useRouter();
 
-  const filteredProjects = projects.filter((project) => {
+  const projectList = dbProjects && dbProjects.length > 0 ? dbProjects : projects;
+
+  const filteredProjects = projectList.filter((project) => {
     if (activeFilter === "all") return true;
     return project.category.toLowerCase() === activeFilter;
   });
+
+  // Dynamically extract unique categories from loaded projects
+  const uniqueCategories = ["ALL", ...Array.from(new Set(projectList.map((p) => p.category.toUpperCase())))];
 
   const handleCardClick = (e: React.MouseEvent, id: string) => {
     const target = e.target as HTMLElement;
@@ -44,7 +54,7 @@ export function Projects() {
 
             {/* Filter Buttons */}
             <div className="flex flex-wrap gap-2.5">
-              {["ALL", "BACKEND", "FULL STACK", "DEVOPS"].map((cat) => {
+              {uniqueCategories.map((cat) => {
                 const isActive = activeFilter === cat.toLowerCase();
                 return (
                   <button

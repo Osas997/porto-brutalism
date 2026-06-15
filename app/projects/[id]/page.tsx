@@ -3,20 +3,58 @@ import { ArrowLeft, ExternalLink, FolderGit2, GitBranch } from "lucide-react";
 import { projects } from "@/lib/data";
 import { Card } from "@/components/ui/Card";
 import { ProjectGallery } from "@/components/ui/ProjectGallery";
+import { prisma } from "@/lib/prisma";
+import type { Project } from "@/types";
 
 interface PageProps {
   params: Promise<{ id: string }>;
 }
 
 export async function generateStaticParams() {
-  return projects.map((project) => ({
-    id: project.id,
-  }));
+  try {
+    const dbProjects = await prisma.project.findMany({ where: { isPublished: true } });
+    const projectList = dbProjects.length > 0 ? dbProjects : projects;
+    return projectList.map((project) => ({
+      id: project.id,
+    }));
+  } catch (err) {
+    console.error("Failed to generate static params from database, using fallback data:", err);
+    return projects.map((project) => ({
+      id: project.id,
+    }));
+  }
 }
 
 export default async function ProjectDetailPage({ params }: PageProps) {
   const { id } = await params;
-  const project = projects.find((p) => p.id === id);
+  
+  let project: Project | undefined = undefined;
+
+  try {
+    const dbProject = await prisma.project.findUnique({ where: { id } });
+    if (dbProject) {
+      project = {
+        id: dbProject.id,
+        title: dbProject.title,
+        description: dbProject.description,
+        techStack: dbProject.techStack,
+        githubUrl: dbProject.githubUrl || undefined,
+        liveUrl: dbProject.liveUrl || undefined,
+        imageUrl: dbProject.imageUrl,
+        category: dbProject.category,
+        longDescription: dbProject.longDescription || undefined,
+        features: dbProject.features,
+        gallery: dbProject.gallery,
+      };
+    }
+  } catch (err) {
+    console.error("Database error loading project details:", err);
+  }
+
+  // Fallback to static mock projects
+  if (!project) {
+    project = projects.find((p) => p.id === id);
+  }
 
   if (!project) {
     return (
@@ -66,7 +104,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
             {/* Project Title */}
             <h1 className="heading-display text-primary leading-none uppercase mb-6">
-              {project.title.split(":").map((part, idx) => (
+              {project.title.split(":").map((part: string, idx: number) => (
                 <span key={part} className="block">
                   {part.trim()}
                   {idx === 0 && <span className="text-secondary">:</span>}
@@ -86,9 +124,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               ))}
             </div>
 
-            {/* Long Description */}
+            {/* Long Description / Description Fallback */}
             <p className="font-mono text-primary text-base leading-relaxed mb-8">
-              {project.longDescription}
+              {project.longDescription || project.description}
             </p>
 
             {/* Key Features checklist */}
