@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://muhammadariq.my.id";
+  const baseUrl = "https://www.muhammadariq.my.id";
 
   // Fetch all published projects to dynamically include in the sitemap
   let projectUrls: MetadataRoute.Sitemap = [];

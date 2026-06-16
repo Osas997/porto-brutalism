@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/admin/", "/api/"],
     },
-    sitemap: "https://muhammadariq.my.id/sitemap.xml",
+    sitemap: "https://www.muhammadariq.my.id/sitemap.xml",
   };
 }
