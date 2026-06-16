@@ -77,12 +77,13 @@ export function Navbar({ name }: NavbarProps) {
               </AnimatePresence>
             </button>
 
-            {/* Hire Me CTA */}
+            {/* Resume CTA */}
             <a
-              href="#contact"
+              target="_blank"
+              href="/cv.pdf"
               className="neo-btn bg-secondary text-primary dark:text-tertiary px-4 py-2 text-sm font-mono font-bold uppercase tracking-wider hover:bg-primary hover:text-secondary dark:hover:text-tertiary transition-colors duration-200"
             >
-              HIRE ME
+              CV
             </a>
           </div>
 
@@ -131,14 +132,15 @@ export function Navbar({ name }: NavbarProps) {
                   </motion.a>
                 ))}
                 <motion.a
-                  href="#contact"
+                  target="_blank"
+                  href="/cv.pdf"
                   onClick={() => setIsOpen(false)}
                   className="neo-btn bg-secondary text-primary dark:text-tertiary px-4 py-3 text-center text-sm font-mono font-bold uppercase tracking-wider hover:bg-primary hover:text-secondary dark:hover:text-tertiary mt-2"
                   initial={{ x: -20, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: navLinks.length * 0.05 }}
                 >
-                  HIRE ME
+                  CV
                 </motion.a>
               </div>
             </motion.div>

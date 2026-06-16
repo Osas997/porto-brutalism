@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/Card";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { siteConfig, socialLinks } from "@/lib/data";
+import { sendContactMessage } from "@/app/actions/contact";
 
 function GithubIcon({ size = 20 }: { size?: number }) {
   return (
@@ -65,6 +66,8 @@ export function Contact({ profile }: ContactProps = {}) {
     email: "",
     message: "",
   });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [statusMessage, setStatusMessage] = useState("");
 
   const email = profile?.email || siteConfig.email;
 
@@ -85,9 +88,26 @@ export function Contact({ profile }: ContactProps = {}) {
     }
   }, [email]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href = `mailto:${email}?subject=Hello from ${formData.name}&body=${encodeURIComponent(formData.message)}`;
+    setStatus("loading");
+    setStatusMessage("");
+
+    try {
+      const result = await sendContactMessage(formData);
+
+      if (!result.success) {
+        throw new Error(result.error || "Failed to send message");
+      }
+
+      setStatus("success");
+      setStatusMessage("Thank you! Your message has been sent successfully.");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+      setStatusMessage(err instanceof Error ? err.message : "Failed to send message. Please try again.");
+    }
   };
 
   return (
@@ -255,10 +275,18 @@ export function Contact({ profile }: ContactProps = {}) {
                   variant="primary"
                   size="lg"
                   className="w-full"
+                  disabled={status === "loading"}
                 >
-                  <Send size={18} />
-                  <span>Send Message</span>
+                  <Send size={18} className={status === "loading" ? "animate-pulse" : ""} />
+                  <span>{status === "loading" ? "Sending..." : "Send Message"}</span>
                 </Button>
+                {statusMessage && (
+                  <div className={`p-3 border-2 border-primary rounded-sm font-mono text-xs font-bold shadow-[2px_2px_0px_rgba(0,0,0,1)] uppercase ${
+                    status === "success" ? "bg-secondary text-primary" : "bg-error text-white"
+                  }`}>
+                    {statusMessage}
+                  </div>
+                )}
               </form>
             </Card>
           </ScrollReveal>

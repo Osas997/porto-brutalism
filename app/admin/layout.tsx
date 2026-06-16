@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   FolderGit2,
@@ -20,12 +20,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import { AdminProvider, useAdmin } from "./AdminContext";
 import { QueryProvider } from "@/lib/queries/query-provider";
 import { useProfile } from "@/lib/queries/profile";
+import { Button } from "@/components/ui/Button";
+import { authClient } from "@/lib/auth-client";
 
 function AdminLayoutContent({ children }: { children: React.ReactNode }) {
   const { theme, toggleTheme } = useTheme();
-  const { message, isSuccess } = useAdmin();
+  const { message, isSuccess,showNotification } = useAdmin();
   const { data: profile } = useProfile();
   const pathname = usePathname();
+  const router = useRouter();
 
   // Mobile navigation state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -37,6 +40,17 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
     { id: "skills", href: "/admin/skills", label: "Manage Tech Stack", icon: Terminal },
     { id: "profile", href: "/admin/profile", label: "Profile Editor", icon: UserCircle }
   ];
+
+  const handleLogout = async () => {
+    try {
+      await authClient.signOut()
+      showNotification("Logged out successfully", true)
+      router.push("/login")
+      router.refresh()
+    } catch (error) {
+      showNotification("Failed to logout", false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background text-primary flex flex-col md:flex-row transition-colors duration-300">
@@ -119,7 +133,7 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
       </AnimatePresence>
 
       {/* DESKTOP SIDEBAR */}
-      <aside className="hidden md:flex flex-col w-72 bg-surface border-r-3 border-primary p-6 shrink-0 relative z-10 min-h-screen">
+      <aside className="hidden md:flex flex-col w-72 bg-surface border-r-3 border-primary p-6 shrink-0 sticky top-0 h-screen z-10 overflow-y-auto">
         <div className="mb-10">
           <Link
             href="/"
@@ -189,13 +203,13 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
                 </>
               )}
             </button>
-            <Link
-              href="/"
+            <Button
+              onClick={handleLogout}
               className="neo-btn p-2 bg-primary text-secondary dark:text-tertiary flex items-center justify-center shadow-[2.5px_2.5px_0px_rgba(0,0,0,1)]"
               title="Logout / Exit"
             >
               <Power size={14} className="stroke-[2.5]" />
-            </Link>
+            </Button>
           </div>
         </div>
       </aside>

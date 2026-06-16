@@ -24,6 +24,7 @@ export default function AdminProjects() {
   const [galleryItems, setGalleryItems] = useState<{ id: string; file?: File; url?: string; previewUrl: string }[]>([]);
   const [newProjGithubUrl, setNewProjGithubUrl] = useState("");
   const [newProjLiveUrl, setNewProjLiveUrl] = useState("");
+  const [newProjSortOrder, setNewProjSortOrder] = useState<number>(0);
 
   const [featureInput, setFeatureInput] = useState("");
   const [isAddingProject, setIsAddingProject] = useState(false);
@@ -84,6 +85,7 @@ export default function AdminProjects() {
     setGalleryItems([]);
     setNewProjGithubUrl("");
     setNewProjLiveUrl("");
+    setNewProjSortOrder(0);
     setIsAddingProject(false);
     setEditingProject(null);
   };
@@ -104,6 +106,7 @@ export default function AdminProjects() {
     );
     setNewProjGithubUrl(project.githubUrl || "");
     setNewProjLiveUrl(project.liveUrl || "");
+    setNewProjSortOrder(project.sortOrder ?? 0);
     setIsAddingProject(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -148,6 +151,7 @@ export default function AdminProjects() {
         imageUrl: finalGallery[0] || `/projects/project-1.svg`,
         githubUrl: newProjGithubUrl.trim() || undefined,
         liveUrl: newProjLiveUrl.trim() || undefined,
+        sortOrder: newProjSortOrder,
       };
 
       if (editingProject) {
@@ -225,7 +229,7 @@ export default function AdminProjects() {
                 {editingProject ? `EDIT PORTFOLIO PROJECT: ${editingProject.title}` : "REGISTER NEW PORTFOLIO PROJECT"}
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="font-mono font-bold text-xs uppercase text-primary">Project Title</label>
                   <input
@@ -247,6 +251,17 @@ export default function AdminProjects() {
                     <option>Full Stack</option>
                     <option>DevOps</option>
                   </select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="font-mono font-bold text-xs uppercase text-primary">Posisi / Sort Order</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={newProjSortOrder}
+                    onChange={(e) => setNewProjSortOrder(parseInt(e.target.value) || 0)}
+                    placeholder="0"
+                    className="font-mono text-xs p-2.5 border-2 border-primary bg-white dark:bg-surface text-primary rounded-sm outline-none focus:bg-secondary/5 focus:shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+                  />
                 </div>
               </div>
 
@@ -420,9 +435,14 @@ export default function AdminProjects() {
           <Card key={project.id} hover={false} className="flex flex-col p-6 bg-surface">
             <div className="flex justify-between items-start">
               <div>
-                <span className="font-mono text-[9px] bg-white dark:bg-surface border-2 border-primary px-1.5 py-0.5 rounded-sm shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] uppercase text-secondary font-bold">
-                  {project.category}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-[9px] bg-white dark:bg-surface border-2 border-primary px-1.5 py-0.5 rounded-sm shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] uppercase text-secondary font-bold">
+                    {project.category}
+                  </span>
+                  <span className="font-mono text-[9px] bg-primary text-secondary dark:text-tertiary border border-primary px-1.5 py-0.5 rounded-sm shadow-[1.5px_1.5px_0px_rgba(0,0,0,1)] font-bold">
+                    POS: {project.sortOrder ?? 0}
+                  </span>
+                </div>
                 <h3 className="heading-sm text-primary font-bold uppercase mt-2.5">
                   {project.title}
                 </h3>

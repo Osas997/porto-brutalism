@@ -10,6 +10,7 @@ export interface Project {
   longDescription?: string;
   features?: string[];
   gallery?: string[];
+  sortOrder?: number;
 }
 
 export interface Experience {

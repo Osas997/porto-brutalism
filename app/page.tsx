@@ -13,7 +13,7 @@ export default async function Home() {
   const dbProfile = await prisma.profile.findUnique({ where: { id: "default" } });
   const dbProjects = await prisma.project.findMany({
     where: { isPublished: true },
-    orderBy: { sortOrder: "asc" },
+    orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
   });
   const dbSkills = await prisma.skill.findMany({
     orderBy: { sortOrder: "asc" },
@@ -49,6 +49,7 @@ export default async function Home() {
     longDescription: p.longDescription || undefined,
     features: p.features,
     gallery: p.gallery,
+    sortOrder: p.sortOrder,
   })) : undefined;
 
   const skills = dbSkills.length > 0 ? dbSkills.map((s) => ({

@@ -43,3 +43,5 @@ next-env.d.ts
 .agent
 /generated/prisma
 /design-system
+prd.md
+design.md
