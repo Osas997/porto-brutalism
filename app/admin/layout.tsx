@@ -73,8 +73,9 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
 
       {/* MOBILE HEADER & NAV */}
       <header className="md:hidden flex items-center justify-between px-6 py-4 bg-surface border-b-3 border-primary relative z-30">
-        <div className="font-mono font-bold tracking-wider text-base text-primary">
-          {profile?.name.split(" ")[1].toUpperCase() ?? "Admin"}//DASHBOARD
+        <div className="flex items-center gap-2 font-mono font-bold tracking-wider text-base text-primary">
+          <img src="/logo.svg" alt="Logo" className="w-5 h-5 object-contain dark:invert" />
+          <span>{profile?.name.split(" ")[1].toUpperCase() ?? "Admin"}//DASHBOARD</span>
         </div>
         <div className="flex items-center gap-4">
           <button
@@ -137,9 +138,10 @@ function AdminLayoutContent({ children }: { children: React.ReactNode }) {
         <div className="mb-10">
           <Link
             href="/"
-            className="font-mono font-bold tracking-wider text-lg text-primary hover:text-secondary transition-colors block"
+            className="flex items-center gap-2 font-mono font-bold tracking-wider text-lg text-primary hover:text-secondary transition-colors"
           >
-            {profile?.name?.split(" ")[1].toUpperCase()}//DASHBOARD
+            <img src="/logo.svg" alt="Logo" className="w-6 h-6 object-contain dark:invert" />
+            <span>{profile?.name?.split(" ")[1].toUpperCase()}//DASHBOARD</span>
           </Link>
           <div className="flex items-center gap-2 mt-2 font-mono text-[10px] text-muted tracking-widest uppercase">
             <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse border border-primary" />

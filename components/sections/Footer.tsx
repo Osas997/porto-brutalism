@@ -70,9 +70,12 @@ export function Footer({ name, githubUrl, instagramUrl, linkedinUrl }: FooterPro
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo + Copyright */}
           <div className="flex flex-col items-center md:items-start gap-2">
-            <span className="font-mono font-bold tracking-wider text-base text-primary uppercase">
-              {name}
-            </span>
+            <div className="flex items-center gap-2">
+              <img src="/logo.svg" alt="Logo" className="w-5 h-5 object-contain dark:invert" />
+              <span className="font-mono font-bold tracking-wider text-base text-primary uppercase">
+                {name}
+              </span>
+            </div>
             <p className="body-sm text-muted flex items-center gap-1">
               © {currentYear} — Built with{" "}
               <Heart size={14} className="text-error fill-error" />

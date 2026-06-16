@@ -36,9 +36,10 @@ export function Navbar({ name }: NavbarProps) {
           {/* Logo */}
           <a
             href="#home"
-            className="font-mono font-bold tracking-wider text-lg md:text-xl text-primary cursor-pointer hover:text-secondary transition-colors duration-200"
+            className="flex items-center gap-2.5 font-mono font-bold tracking-wider text-lg md:text-xl text-primary cursor-pointer hover:text-secondary transition-colors duration-200"
           >
-            {logoText}
+            <img src="/logo.svg" alt="Logo" className="w-6 h-6 object-contain dark:invert" />
+            <span>{logoText}</span>
           </a>
 
           {/* Desktop Nav */}

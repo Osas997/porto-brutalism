@@ -47,6 +47,9 @@ export const metadata: Metadata = {
       "Building the future of digital experiences with technological elegance.",
     type: "website",
   },
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 
