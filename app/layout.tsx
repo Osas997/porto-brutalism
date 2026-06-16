@@ -27,56 +27,28 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "John Doe — Backend Developer | Portfolio",
+  title: {
+    default: "Muhammad Ariq Alfarizi | Portfolio",
+    template: "Muhammad Ariq Alfarizi - %s",
+  },
   description:
-    "I build robust, scalable systems that power the web. Backend developer specializing in Go, Python, TypeScript, and distributed systems.",
+    "High-fidelity, performance-driven interfaces for visionary brands. Bridging cinematic design and robust engineering.",
   keywords: [
-    "backend developer",
     "portfolio",
-    "Go",
-    "Python",
-    "TypeScript",
-    "microservices",
-    "API",
+    "web developer",
+    "backend developer",
+    "express",
+    "nextjs",
+    "laravel",
   ],
-  authors: [{ name: "John Doe" }],
-  creator: "John Doe",
   openGraph: {
+    title: "Muhammad Ariq Alfarizi - Portfolio",
+    description:
+      "Building the future of digital experiences with technological elegance.",
     type: "website",
-    locale: "en_US",
-    url: "https://johndoe.dev",
-    siteName: "John Doe — Portfolio",
-    title: "John Doe — Backend Developer",
-    description:
-      "I build robust, scalable systems that power the web. Backend developer specializing in Go, Python, TypeScript, and distributed systems.",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "John Doe — Backend Developer Portfolio",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "John Doe — Backend Developer",
-    description:
-      "I build robust, scalable systems that power the web.",
-    creator: "@johndoe",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
   },
 };
+
 
 export default function RootLayout({
   children,

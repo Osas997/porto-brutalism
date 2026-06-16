@@ -5,6 +5,8 @@ import { Card } from "@/components/ui/Card";
 import { ProjectGallery } from "@/components/ui/ProjectGallery";
 import { prisma } from "@/lib/prisma";
 import type { Project } from "@/types";
+import { Metadata } from "next";
+import { getProjectById } from "@/lib/api/project";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -23,6 +25,20 @@ export async function generateStaticParams() {
       id: project.id,
     }));
   }
+}
+
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata > {
+  const { id } = await params;
+  const project = await getProjectById(id);
+  if (!project) return { title: "Not Found" };
+
+  return {
+    title: project.title,
+    description: project.description.slice(0, 160),
+  };
 }
 
 export default async function ProjectDetailPage({ params }: PageProps) {
